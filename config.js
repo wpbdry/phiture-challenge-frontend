@@ -1,0 +1,1 @@
+var searchApiUrl = "http://localhost:5000/search";
