@@ -12,8 +12,11 @@ document.getElementById("search-form").addEventListener("submit", function(event
     var resultsDiv = document.getElementById("results-div");
     resultsDiv.innerText = "You searched for: " + searchTerm;
 
-    //POST
-    var xhttp = new XMLHttpRequest()
-    xhttp.open("POST", searchApiUrl, true);
-    console.log( xhttp.send("some test string"));
+    fetch(searchApiUrl)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(myJson) {
+      console.log(myJson);
+    });
   });
