@@ -1,0 +1,19 @@
+#results-div > table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#results-div > table > tr > th,
+#results-div > table > tr > td {
+    width: 800px;
+    text-align: left;
+    border: 1px solid black;
+    padding-left: 8px;
+}
+
+#results-div > table > tr > th > img,
+#results-div > table > tr > td > img {
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+}
