@@ -6,12 +6,13 @@ _/  _/  _/  _/     _/        _/    _/  _/    _/  _/  _/        _/
 _/_/    _/_/      _/        _/_/_/    _/_/_/    _/    _/      _/  made it!
 *************************************************************************/
 
-function displaySearchResults(apiReturn) {
-  var resultsDiv = document.getElementById("results-div");
-  //const textResult = JSON.stringify(apiReturn);
-  const textResult = apiReturn.result;
-  resultsDiv.innerText = "The server returned: " + textResult;
-};
+document.getElementById("search-form").addEventListener("submit", function(event){
+    event.preventDefault();
+    const searchTerm = document.getElementById("search-input").value;
+    sendSearchRequest(searchTerm)
+    .then(payload => displaySearchResults(payload))
+    .catch(error => console.error(error));
+});
 
 async function sendSearchRequest(searchTerm) {
   const payload = {
@@ -30,10 +31,8 @@ async function sendSearchRequest(searchTerm) {
   return await response.json();
 };
 
-document.getElementById("search-form").addEventListener("submit", function(event){
-    event.preventDefault();
-    const searchTerm = document.getElementById("search-input").value;
-    sendSearchRequest(searchTerm)
-    .then(data => displaySearchResults(data)) //try changing data to payload
-    .catch(error => console.error(error));
-  });
+function displaySearchResults(apiReturn) {
+  var resultsDiv = document.getElementById("results-div");
+  const textResult = apiReturn.result;
+  resultsDiv.innerText = "The server returned: " + textResult;
+};
