@@ -111,6 +111,7 @@ function createResultRow(resultItem, cellType) {
     if(keys[j] === "photo") {
       var cellContent = document.createElement("img");
       cellContent.setAttribute("src", resultItem.photo);
+      cellContent.setAttribute("alt", resultItem.name);
     } else {
       var cellContent = document.createTextNode(resultItem[keys[j]]);
     };
