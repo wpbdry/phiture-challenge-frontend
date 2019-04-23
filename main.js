@@ -9,10 +9,25 @@ _/_/    _/_/      _/        _/_/_/    _/_/_/    _/    _/      _/  made it!
 document.getElementById("search-form").addEventListener("submit", function(event){
     event.preventDefault();
     const searchTerm = document.getElementById("search-input").value;
-    sendSearchRequest(searchTerm)
-    .then(payload => displaySearchResults(payload))
-    .catch(error => console.error(error));
+    displaySearchResults(searchTerm);
 });
+
+async function displaySearchResults(searchTerm) {
+  //Set loading message
+  var resultsDiv = document.getElementById("results-div");
+  resultsDiv.innerHTML = "Loading...";
+  //Get results
+  sendSearchRequest(searchTerm)
+    .then(payload => generateSearchResultsHtmlElements(payload))
+    .catch(error => console.error(error))
+    //Display results
+    .then(function(elements) {
+      resultsDiv.innerHTML = "";
+      resultsDiv.appendChild(elements.header);
+      resultsDiv.appendChild(elements.table);
+      document.getElementById("search-input").select();
+    });
+};
 
 async function sendSearchRequest(searchTerm) {
   const payload = {
@@ -31,7 +46,7 @@ async function sendSearchRequest(searchTerm) {
   return await response.json();
 };
 
-function displaySearchResults(apiReturn) {
+function generateSearchResultsHtmlElements(apiReturn) {
   console.log(apiReturn);
   var headerText = "";
   var resultsTable;
@@ -55,13 +70,13 @@ function displaySearchResults(apiReturn) {
         resultsTable = createResultsTable(results);
       };
   };
-  // Populate results div
-  var resultsDiv = document.getElementById("results-div");
-  resultsDiv.innerHTML = "";
+  // Return elements
   var headerEl = document.createElement("h2");
   headerEl.appendChild(headerText);
-  resultsDiv.appendChild(headerEl);
-  resultsDiv.appendChild(resultsTable);
+  return {
+    header: headerEl,
+    table: resultsTable
+  };
 };
 
 function createResultsTable(searchResults) {
