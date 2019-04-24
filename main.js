@@ -69,7 +69,9 @@ function generateSearchResultsHtmlElements(apiReturn) {
         headerText1 = document.createTextNode("Unknown server error...");
       };
       break;
-    case 2: //Other server side error
+    case 2: //Serverside database connection error
+      alert("Sorry! Our backend could not connect to remote database hosted on elephantsql.");
+    case 3: //Other unknown server side error
       headerText1 = document.createTextNode("Unknown server error...");
       break;
     default: //Array of results is returned as expected
