@@ -17,3 +17,14 @@
     height: 40px;
     padding: 0px;
 }
+
+#tab-bar {
+    width: 100%;
+    border-bottom: 1px black solid;
+    padding-bottom: 8px;
+}
+
+.active {
+    color: red;
+    font-weight: 800;
+}
