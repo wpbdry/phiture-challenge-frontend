@@ -15,16 +15,18 @@ document.getElementById("search-form").addEventListener("submit", function(event
 async function displaySearchResults(searchTerm) {
   //Set loading message
   var resultsDiv = document.getElementById("results-div");
-  resultsDiv.innerHTML = "Loading...";
+  resultsDiv.innerHTML = "Searching...";
   //Get results
   sendSearchRequest(searchTerm)
     .then(payload => generateSearchResultsHtmlElements(payload))
     .catch(error => console.error(error))
     //Display results
-    .then(function(elements) {
+    .then(function(htmlElements) {
       resultsDiv.innerHTML = "";
-      resultsDiv.appendChild(elements.header);
-      resultsDiv.appendChild(elements.table);
+      resultsDiv.appendChild(htmlElements.header1);
+      resultsDiv.appendChild(htmlElements.results1);
+      resultsDiv.appendChild(htmlElements.header2);
+      resultsDiv.appendChild(htmlElements.results2);
       document.getElementById("search-input").select();
     });
 };
@@ -48,34 +50,46 @@ async function sendSearchRequest(searchTerm) {
 
 function generateSearchResultsHtmlElements(apiReturn) {
   console.log(apiReturn);
-  var headerText = "";
-  var resultsTable;
+  //1 is exact search matches and 2 is close search matches, as returned from the server
+  var headerText1 = document.createTextNode("");
+  var headerText2 = document.createTextNode("");
+  var resultsTable1 = document.createElement("div");
+  var resultsTable2 = document.createElement("div");
   switch (apiReturn.exitcode) {
     case 1: //Server received empty search result
       if(apiReturn.search === "") {
-        headerText = document.createTextNode("Please no empty searches :)");
+        headerText1 = document.createTextNode("Please no empty searches :)");
       } else {
-        headerText = document.createTextNode("Unknown server error...");
+        headerText1 = document.createTextNode("Unknown server error...");
       };
       break;
     case 2: //Other server side error
-      headerText = document.createTextNode("Unknown server error...");
+      headerText1 = document.createTextNode("Unknown server error...");
       break;
     default: //Array of results is returned as expected
       results = apiReturn.results;
+      moreResults = apiReturn.moreresults;
       if (results.length === 0) {
-        headerText = document.createTextNode("No results for: " + apiReturn.search);
+        headerText1 = document.createTextNode("No exact matches for: " + apiReturn.search);
       } else {
-        headerText = document.createTextNode("Results for: " + apiReturn.search);
-        resultsTable = createResultsTable(results);
+        headerText1 = document.createTextNode("Exact matches for: " + apiReturn.search);
+        resultsTable1 = createResultsTable(results);
       };
+      if (moreResults.length !== 0) {
+        headerText2 = document.createTextNode("Close matches for: " + apiReturn.search);
+        resultsTable2 = createResultsTable(moreResults);
+      }
   };
   // Return elements
-  var headerEl = document.createElement("h2");
-  headerEl.appendChild(headerText);
+  var headerEl1 = document.createElement("h2");
+  var headerEl2 = document.createElement("h2");
+  headerEl1.appendChild(headerText1);
+  headerEl2.appendChild(headerText2);
   return {
-    header: headerEl,
-    table: resultsTable
+    header1: headerEl1,
+    results1: resultsTable1,
+    header2: headerEl2,
+    results2: resultsTable2
   };
 };
 
