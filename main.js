@@ -18,6 +18,12 @@ async function displaySearchResults(searchTerm) {
   resultsDiv.innerHTML = "Searching...";
   //Get results
   sendSearchRequest(searchTerm)
+    .catch(function(error) {
+      console.log(error);
+      if(error.message == "Failed to fetch") {
+        alert("Connection error!");
+      };
+    })
     .then(payload => generateSearchResultsHtmlElements(payload))
     .catch(error => console.error(error))
     //Display results
