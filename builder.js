@@ -20,37 +20,30 @@ async function displayTeamResult(budget) {
     }
     //Set loading message
     var teamResultDiv = document.getElementById("team-result-div");
-    teamResultDiv.innerHTML = "Searching...";
+    teamResultDiv.innerHTML = "Calculating your team...";
     //Get results
-    console.log("Your budget is: " + budget);
-};
-
-  /*
-  sendSearchRequest(searchTerm)
+    sendTeamRequest(budget)
     .catch(function(error) {
-      console.log(error);
-      if(error.message == "Failed to fetch") {
+        console.log(error);
+        if(error.message == "Failed to fetch") {
         alert("Connection error!");
-      };
+        };
     })
-    .then(payload => generateSearchResultsHtmlElements(payload))
+    .then(payload => generateTeamResultsHtmlElements(payload))
     .catch(error => console.error(error))
     //Display results
     .then(function(htmlElements) {
-      resultsDiv.innerHTML = "";
-      resultsDiv.appendChild(htmlElements.header1);
-      resultsDiv.appendChild(htmlElements.results1);
-      resultsDiv.appendChild(htmlElements.header2);
-      resultsDiv.appendChild(htmlElements.results2);
-      document.getElementById("search-input").select();
+        teamResultDiv.innerHTML = "";
+        teamResultDiv.appendChild(htmlElements.test);
+        document.getElementById("search-input").select();
     });
 };
 
-async function sendSearchRequest(searchTerm) {
+async function sendTeamRequest(budget) {
   const payload = {
-    searchterm: searchTerm
+    budget: budget
   }
-  const response = await fetch(searchApiUrl, {
+  const response = await fetch(teamApiUrl, {
     method: "POST",
     cache: "no-cache",
     headers: {
@@ -62,4 +55,14 @@ async function sendSearchRequest(searchTerm) {
   });
   return await response.json();
 };
-*/
+
+function generateTeamResultsHtmlElements(teamJson) {
+    var functionReturn = {
+        test: document.createElement("div")
+    }
+    var testText = document.createTextNode(JSON.stringify(teamJson));
+    var testDiv = document.createElement("div");
+    testDiv.appendChild(testText);
+    functionReturn.test = testDiv;
+    return functionReturn;
+}
