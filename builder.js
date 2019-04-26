@@ -12,6 +12,10 @@ document.getElementById("builder-form").addEventListener("submit", function(even
     displayTeamResult(budget);
 });
 
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 async function displayTeamResult(budget) {
     //Check valid input
     if(isNaN(budget) || budget - Math.floor(budget) != 0) {
@@ -34,8 +38,8 @@ async function displayTeamResult(budget) {
     //Display results
     .then(function(htmlElements) {
         teamResultDiv.innerHTML = "";
-        teamResultDiv.appendChild(htmlElements.test);
-        document.getElementById("search-input").select();
+        teamResultDiv.appendChild(htmlElements.header);
+        teamResultDiv.appendChild(htmlElements.table);
     });
 };
 
@@ -57,12 +61,58 @@ async function sendTeamRequest(budget) {
 };
 
 function generateTeamResultsHtmlElements(teamJson) {
-    var functionReturn = {
-        test: document.createElement("div")
+  console.log(teamJson);
+  //Create header
+  var headerEl = document.createElement("h2");
+  var headerText = document.createTextNode("You can have the following team for: €" + teamJson.price + ",00");
+  headerEl.appendChild(headerText);
+  //Create table
+  table = document.createElement("table");
+  //Add header row
+  tableHeader = {
+    photo: "img/profile-icon.png",
+    name: "Name",
+    position: "Position",
+    age: "Age",
+    nationality: "Nationality",
+    position_score: "Score",
+    value: "Value",
+    preferred_foot: "Foot",
+    height: "Height"
+  };
+  headerRow = createResultRowTeam(tableHeader, "th");
+  table.appendChild(headerRow);
+  //Add result rows
+  const teamPositions = ["goalkeeper", "fullback", "halfback", "forward playing"]
+  for(var k=0; k<teamPositions.length; k++) {
+    var position = teamPositions[k];
+    var positionPlayers = teamJson[position];
+    for (var l=0; l<positionPlayers.length; l++) {
+      positionPlayers[l].position = capitalize(position);
+      row = createResultRowTeam(positionPlayers[l], "td");
+      table.appendChild(row);
     }
-    var testText = document.createTextNode(JSON.stringify(teamJson));
-    var testDiv = document.createElement("div");
-    testDiv.appendChild(testText);
-    functionReturn.test = testDiv;
-    return functionReturn;
-}
+  }
+  return {
+    header: headerEl,
+    table: table
+  };
+};
+
+function createResultRowTeam(resultItem, cellType) {
+  var row = document.createElement("tr");
+  const teamKeys = ["photo", "position", "name", "age", "nationality", "position_score", "value", "preferred_foot", "height"];
+  for(var j=0; j<teamKeys.length; j++) {
+    var cell = document.createElement(cellType);
+    if(teamKeys[j] === "photo") {
+      var cellContent = document.createElement("img");
+      cellContent.setAttribute("src", resultItem.photo);
+      cellContent.setAttribute("alt", resultItem.name);
+    } else {
+      var cellContent = document.createTextNode(resultItem[teamKeys[j]]);
+    };
+    cell.appendChild(cellContent);
+    row.appendChild(cell);
+  };
+  return row;
+};

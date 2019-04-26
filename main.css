@@ -1,10 +1,13 @@
-#results-div > table {
+#results-div > table,
+#team-result-div > table {
     border: 1px solid black;
     border-collapse: collapse;
 }
 
 #results-div > table > tr > th,
-#results-div > table > tr > td {
+#results-div > table > tr > td,
+#team-result-div > table > tr > th,
+#team-result-div > table > tr > td {
     width: 800px;
     text-align: left;
     border: 1px solid black;
@@ -12,7 +15,9 @@
 }
 
 #results-div > table > tr > th > img,
-#results-div > table > tr > td > img {
+#results-div > table > tr > td > img,
+#team-result-div > table > tr > th > img,
+#team-result-div > table > tr > td > img {
     width: 40px;
     height: 40px;
     padding: 0px;
