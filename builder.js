@@ -64,35 +64,39 @@ function generateTeamResultsHtmlElements(teamJson) {
   console.log(teamJson);
   //Create header
   var headerEl = document.createElement("h2");
-  var headerText = document.createTextNode("You can have the following team for: €" + teamJson.price + ",00");
-  headerEl.appendChild(headerText);
-  //Create table
-  table = document.createElement("table");
-  //Add header row
-  tableHeader = {
-    photo: "img/profile-icon.png",
-    name: "Name",
-    position: "Position",
-    age: "Age",
-    nationality: "Nationality",
-    position_score: "Score",
-    value: "Value",
-    preferred_foot: "Foot",
-    height: "Height"
-  };
-  headerRow = createResultRowTeam(tableHeader, "th");
-  table.appendChild(headerRow);
-  //Add result rows
-  const teamPositions = ["goalkeeper", "fullback", "halfback", "forward playing"]
-  for(var k=0; k<teamPositions.length; k++) {
-    var position = teamPositions[k];
-    var positionPlayers = teamJson[position];
-    for (var l=0; l<positionPlayers.length; l++) {
-      positionPlayers[l].position = capitalize(position);
-      row = createResultRowTeam(positionPlayers[l], "td");
-      table.appendChild(row);
+  var table = document.createElement("table");
+  if(teamJson.team_is_complete) {
+    var headerText = document.createTextNode("You can have the following team for: €" + teamJson.price + ",00");
+    //Create table
+    //Add header row
+    tableHeader = {
+      photo: "img/profile-icon.png",
+      name: "Name",
+      position: "Position",
+      age: "Age",
+      nationality: "Nationality",
+      position_score: "Score",
+      value: "Value",
+      preferred_foot: "Foot",
+      height: "Height"
+    };
+    headerRow = createResultRowTeam(tableHeader, "th");
+    table.appendChild(headerRow);
+    //Add result rows
+    const teamPositions = ["goalkeeper", "fullback", "halfback", "forward playing"]
+    for(var k=0; k<teamPositions.length; k++) {
+      var position = teamPositions[k];
+      var positionPlayers = teamJson[position];
+      for (var l=0; l<positionPlayers.length; l++) {
+        positionPlayers[l].position = capitalize(position);
+        row = createResultRowTeam(positionPlayers[l], "td");
+        table.appendChild(row);
+      }
     }
+  } else {
+    var headerText = document.createTextNode("€" + teamJson.budget + ",00 is too little to buy an entire team :(");
   }
+  headerEl.appendChild(headerText);
   return {
     header: headerEl,
     table: table
